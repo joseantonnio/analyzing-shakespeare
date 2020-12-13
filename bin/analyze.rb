@@ -29,12 +29,12 @@ class Analyzer
         xml.xpath("//SPEECH").each do |scene|
             current = nil
             scene.children.each do |speech|
-                if (speech.name == "SPEAKER")
+                if (speech.name == "SPEAKER" and !IGNORE.include?(speech.content))
                     current = speech.content
                     speeches[current] = 1 if (speeches[current] == nil)
                 end
 
-                speeches[current] = speeches[current] + 1 if speech.name == "LINE"
+                speeches[current] = speeches[current] + 1 if speech.name == "LINE" && !current.nil?
             end
         end
 
