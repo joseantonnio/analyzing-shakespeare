@@ -8,9 +8,9 @@ class Analyzer
     IGNORE = %w(ALL)
 
     def initialize()
-        xml = self.open_xml
-        speeches = self.list_speeches(xml)
-        self.puts_speeches(speeches)
+        xml = open_xml
+        speeches = list_speeches(xml)
+        puts_speeches(speeches)
     end
 
     def open_xml()
@@ -25,27 +25,16 @@ class Analyzer
 
     def list_speeches(xml)
         speeches = {}
-        if (xml.children.size > 0)
-            xml.children.each do |play|
-                if (play.children.size > 0 and play.name == "ACT")
-                    play.children.each do |act|
-                        if (act.children.size > 0 and act.name == "SCENE")
-                            act.children.each do |scene|
-                                if (scene.children.size > 0 and scene.name == "SPEECH")
-                                    current = nil
-                                    scene.children.each do |speech|
-                                        if (speech.name == "SPEAKER")
-                                            current = speech.content
-                                            speeches[current] = 1 if (speeches[current] == nil)
-                                        end
 
-                                        speeches[current] = speeches[current] + 1 if speech.name == "LINE"
-                                    end
-                                end
-                            end
-                        end
-                    end
+        xml.xpath("//SPEECH").each do |scene|
+            current = nil
+            scene.children.each do |speech|
+                if (speech.name == "SPEAKER")
+                    current = speech.content
+                    speeches[current] = 1 if (speeches[current] == nil)
                 end
+
+                speeches[current] = speeches[current] + 1 if speech.name == "LINE"
             end
         end
 
